@@ -1,0 +1,62 @@
+services:
+
+  mariadb:
+    image: mariadb:11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+    volumes:
+      - mariadbdata:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "13330:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api-investigacion:
+    build: ./api_investigacion
+    volumes:
+      - ./api_investigacion:/app
+    restart: unless-stopped
+    ports:
+      - "8111:8111"
+    environment:
+      DB_DSN: mysql:host=mariadb;port=3306;dbname=${MARIADB_DATABASE}
+      DB_USUARIO: ${MARIADB_USER}
+      DB_CLAVE: ${MARIADB_PASSWORD}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+
+  front-php:
+    build: ${FRONT_PATH}
+    volumes:
+      - ${FRONT_PATH}:/app
+    restart: unless-stopped
+    ports:
+      - "8110:8110"
+    environment:
+      URL_API: http://api-investigacion:8111
+    depends_on:
+      - api-investigacion
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${MARIADB_USER}
+      PMA_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "8105:80"
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadbdata:
