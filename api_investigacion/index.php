@@ -178,11 +178,9 @@ if (preg_match('#^/api/area_aplicacion/([^/]+)$#', $ruta, $coincidencias)) {
 if ($ruta === '/api/termino_clave') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorTerminoClave.php';
 
-    $controlador = new ControladorTerminoClave(
-        crearServicioTerminoClave()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['termino_clave'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -198,11 +196,9 @@ if ($ruta === '/api/termino_clave') {
 if (preg_match('#^/api/termino_clave/([^/]+)$#', $ruta, $coincidencias)) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorTerminoClave.php';
 
-    $controlador = new ControladorTerminoClave(
-        crearServicioTerminoClave()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['termino_clave'];
 
     $clave = urldecode($coincidencias[1]);
 
@@ -317,7 +313,7 @@ function enrutarFicha(
     } elseif ($metodo === 'PATCH') {
         $controlador->actualizar($clave, $cuerpo);
     } elseif ($metodo === 'DELETE') {
-        $controlador->eliminar($clave);
+        $controlador->retirar($clave);
     } else {
         responderNoPermitido();
     }
