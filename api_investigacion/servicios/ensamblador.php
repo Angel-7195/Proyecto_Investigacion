@@ -10,6 +10,10 @@ require_once __DIR__ . '/../repositorios/RepositorioUniversidadMariaDB.php';
 require_once __DIR__ . '/ServicioUniversidad.php';
 require_once __DIR__ . '/../controladores/ControladorUniversidad.php';
 
+require_once __DIR__ . '/../repositorios/RepositorioLineaInvestigacionMariaDB.php';
+require_once __DIR__ . '/ServicioLineaInvestigacion.php';
+require_once __DIR__ . '/../controladores/ControladorLineaInvestigacion.php';
+
 /**
  * Construye la conexión PDO utilizando únicamente
  * las variables de entorno configuradas para la API.
@@ -49,6 +53,10 @@ function ensamblarControladores(): array
 {
     $pdo = crearConexion();
 
+    // --------------------------------------------------------------
+    // TERMINO CLAVE
+    // --------------------------------------------------------------
+
     $repositorioTerminoClave =
         new RepositorioTerminoClaveMariaDB($pdo);
 
@@ -58,6 +66,10 @@ function ensamblarControladores(): array
     $controladorTerminoClave =
         new ControladorTerminoClave($servicioTerminoClave);
 
+
+    // --------------------------------------------------------------
+    // UNIVERSIDAD
+    // --------------------------------------------------------------
 
     $repositorioUniversidad =
         new RepositorioUniversidadMariaDB($pdo);
@@ -69,8 +81,31 @@ function ensamblarControladores(): array
         new ControladorUniversidad($servicioUniversidad);
 
 
+    // --------------------------------------------------------------
+    // LINEA DE INVESTIGACION
+    // --------------------------------------------------------------
+
+    $repositorioLineaInvestigacion =
+        new RepositorioLineaInvestigacionMariaDB($pdo);
+
+    $servicioLineaInvestigacion =
+        new ServicioLineaInvestigacion(
+            $repositorioLineaInvestigacion
+        );
+
+    $controladorLineaInvestigacion =
+        new ControladorLineaInvestigacion(
+            $servicioLineaInvestigacion
+        );
+
+
+    // --------------------------------------------------------------
+    // CONTROLADORES DISPONIBLES
+    // --------------------------------------------------------------
+
     return [
         'termino_clave' => $controladorTerminoClave,
         'universidad' => $controladorUniversidad,
+        'linea_investigacion' => $controladorLineaInvestigacion,
     ];
 }

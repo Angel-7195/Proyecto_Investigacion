@@ -26,7 +26,10 @@ header('Content-Type: application/json; charset=utf-8');
 // ----------------------------------------------------------------------
 
 $metodo = $_SERVER['REQUEST_METHOD'];
-$ruta = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
+$ruta = rtrim(
+    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH),
+    '/'
+) ?: '/';
 
 $contenido = file_get_contents('php://input');
 $cuerpo = [];
@@ -37,13 +40,16 @@ if ($contenido !== '') {
     if (!is_array($decodificado)) {
         http_response_code(422);
 
-        echo json_encode([
-            'estado' => 422,
-            'mensaje' => 'Datos inválidos.',
-            'errores' => [
-                'El cuerpo debe contener un JSON válido.',
+        echo json_encode(
+            [
+                'estado' => 422,
+                'mensaje' => 'Datos inválidos.',
+                'errores' => [
+                    'El cuerpo debe contener un JSON válido.',
+                ],
             ],
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        );
 
         return;
     }
@@ -56,18 +62,21 @@ if ($contenido !== '') {
 // ----------------------------------------------------------------------
 
 if ($ruta === '/' && $metodo === 'GET') {
-    echo json_encode([
-        'mensaje' => 'API de Investigación funcionando',
-        'version' => 'v1',
-        'recursos' => [
-            'area_conocimiento',
-            'objetivo_desarrollo_sostenible',
-            'area_aplicacion',
-            'termino_clave',
-            'universidad',
-            'linea_investigacion',
+    echo json_encode(
+        [
+            'mensaje' => 'API de Investigación funcionando',
+            'version' => 'v1',
+            'recursos' => [
+                'area_conocimiento',
+                'objetivo_desarrollo_sostenible',
+                'area_aplicacion',
+                'termino_clave',
+                'universidad',
+                'linea_investigacion',
+            ],
         ],
-    ], JSON_UNESCAPED_UNICODE);
+        JSON_UNESCAPED_UNICODE
+    );
 
     return;
 }
@@ -96,7 +105,13 @@ if ($ruta === '/api/area_conocimiento') {
     return;
 }
 
-if (preg_match('#^/api/area_conocimiento/([^/]+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/area_conocimiento/([^/]+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
     require_once __DIR__ . '/controladores/ControladorAreaConocimiento.php';
@@ -107,7 +122,13 @@ if (preg_match('#^/api/area_conocimiento/([^/]+)$#', $ruta, $coincidencias)) {
 
     $clave = urldecode($coincidencias[1]);
 
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
+    );
+
     return;
 }
 
@@ -135,7 +156,13 @@ if ($ruta === '/api/objetivo_desarrollo_sostenible') {
     return;
 }
 
-if (preg_match('#^/api/objetivo_desarrollo_sostenible/([^/]+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/objetivo_desarrollo_sostenible/([^/]+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
     require_once __DIR__ . '/controladores/ControladorObjetivoDesarrolloSostenible.php';
@@ -146,7 +173,13 @@ if (preg_match('#^/api/objetivo_desarrollo_sostenible/([^/]+)$#', $ruta, $coinci
 
     $clave = (int) urldecode($coincidencias[1]);
 
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
+    );
+
     return;
 }
 
@@ -174,7 +207,13 @@ if ($ruta === '/api/area_aplicacion') {
     return;
 }
 
-if (preg_match('#^/api/area_aplicacion/([^/]+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/area_aplicacion/([^/]+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
     require_once __DIR__ . '/controladores/ControladorAreaAplicacion.php';
@@ -185,7 +224,13 @@ if (preg_match('#^/api/area_aplicacion/([^/]+)$#', $ruta, $coincidencias)) {
 
     $clave = (int) urldecode($coincidencias[1]);
 
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
+    );
+
     return;
 }
 
@@ -211,7 +256,13 @@ if ($ruta === '/api/termino_clave') {
     return;
 }
 
-if (preg_match('#^/api/termino_clave/([^/]+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/termino_clave/([^/]+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
 
@@ -220,7 +271,13 @@ if (preg_match('#^/api/termino_clave/([^/]+)$#', $ruta, $coincidencias)) {
 
     $clave = urldecode($coincidencias[1]);
 
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
+    );
+
     return;
 }
 
@@ -246,7 +303,13 @@ if ($ruta === '/api/universidad') {
     return;
 }
 
-if (preg_match('#^/api/universidad/(\d+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/universidad/(\d+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
 
@@ -255,7 +318,13 @@ if (preg_match('#^/api/universidad/(\d+)$#', $ruta, $coincidencias)) {
 
     $clave = (int) $coincidencias[1];
 
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
+    );
+
     return;
 }
 
@@ -266,11 +335,9 @@ if (preg_match('#^/api/universidad/(\d+)$#', $ruta, $coincidencias)) {
 if ($ruta === '/api/linea_investigacion') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorLineaInvestigacion.php';
 
-    $controlador = new ControladorLineaInvestigacion(
-        crearServicioLineaInvestigacion()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['linea_investigacion'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -283,18 +350,28 @@ if ($ruta === '/api/linea_investigacion') {
     return;
 }
 
-if (preg_match('#^/api/linea_investigacion/([^/]+)$#', $ruta, $coincidencias)) {
+if (
+    preg_match(
+        '#^/api/linea_investigacion/(\d+)$#',
+        $ruta,
+        $coincidencias
+    )
+) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorLineaInvestigacion.php';
 
-    $controlador = new ControladorLineaInvestigacion(
-        crearServicioLineaInvestigacion()
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['linea_investigacion'];
+
+    $clave = (int) $coincidencias[1];
+
+    enrutarFicha(
+        $controlador,
+        $metodo,
+        $clave,
+        $cuerpo
     );
 
-    $clave = (int) urldecode($coincidencias[1]);
-
-    enrutarFicha($controlador, $metodo, $clave, $cuerpo);
     return;
 }
 
@@ -304,11 +381,14 @@ if (preg_match('#^/api/linea_investigacion/([^/]+)$#', $ruta, $coincidencias)) {
 
 http_response_code(404);
 
-echo json_encode([
-    'estado' => 404,
-    'mensaje' => 'Ruta no encontrada.',
-    'detalle' => "$metodo $ruta",
-], JSON_UNESCAPED_UNICODE);
+echo json_encode(
+    [
+        'estado' => 404,
+        'mensaje' => 'Ruta no encontrada.',
+        'detalle' => "$metodo $ruta",
+    ],
+    JSON_UNESCAPED_UNICODE
+);
 
 // ----------------------------------------------------------------------
 // Funciones auxiliares del ENRUTADOR
@@ -337,8 +417,11 @@ function responderNoPermitido(): void
 {
     http_response_code(405);
 
-    echo json_encode([
-        'estado' => 405,
-        'mensaje' => 'Método no permitido para esta ruta.',
-    ], JSON_UNESCAPED_UNICODE);
+    echo json_encode(
+        [
+            'estado' => 405,
+            'mensaje' => 'Método no permitido para esta ruta.',
+        ],
+        JSON_UNESCAPED_UNICODE
+    );
 }
