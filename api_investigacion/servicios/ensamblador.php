@@ -6,6 +6,10 @@ require_once __DIR__ . '/../repositorios/RepositorioTerminoClaveMariaDB.php';
 require_once __DIR__ . '/ServicioTerminoClave.php';
 require_once __DIR__ . '/../controladores/ControladorTerminoClave.php';
 
+require_once __DIR__ . '/../repositorios/RepositorioUniversidadMariaDB.php';
+require_once __DIR__ . '/ServicioUniversidad.php';
+require_once __DIR__ . '/../controladores/ControladorUniversidad.php';
+
 /**
  * Construye la conexión PDO utilizando únicamente
  * las variables de entorno configuradas para la API.
@@ -32,6 +36,7 @@ function crearConexion(): PDO
         $clave,
         [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_EMULATE_PREPARES => false,
             PDO::MYSQL_ATTR_FOUND_ROWS => true,
         ]
     );
@@ -39,9 +44,6 @@ function crearConexion(): PDO
 
 /**
  * Construye las implementaciones concretas utilizadas por la API.
- *
- * Los demás recursos de la v1 se agregarán aquí cuando
- * sus respectivas capas estén implementadas.
  */
 function ensamblarControladores(): array
 {
@@ -56,7 +58,19 @@ function ensamblarControladores(): array
     $controladorTerminoClave =
         new ControladorTerminoClave($servicioTerminoClave);
 
+
+    $repositorioUniversidad =
+        new RepositorioUniversidadMariaDB($pdo);
+
+    $servicioUniversidad =
+        new ServicioUniversidad($repositorioUniversidad);
+
+    $controladorUniversidad =
+        new ControladorUniversidad($servicioUniversidad);
+
+
     return [
         'termino_clave' => $controladorTerminoClave,
+        'universidad' => $controladorUniversidad,
     ];
 }

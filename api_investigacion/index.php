@@ -29,9 +29,27 @@ $metodo = $_SERVER['REQUEST_METHOD'];
 $ruta = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') ?: '/';
 
 $contenido = file_get_contents('php://input');
-$cuerpo = $contenido !== ''
-    ? json_decode($contenido, true)
-    : [];
+$cuerpo = [];
+
+if ($contenido !== '') {
+    $decodificado = json_decode($contenido, true);
+
+    if (!is_array($decodificado)) {
+        http_response_code(422);
+
+        echo json_encode([
+            'estado' => 422,
+            'mensaje' => 'Datos inválidos.',
+            'errores' => [
+                'El cuerpo debe contener un JSON válido.',
+            ],
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+        return;
+    }
+
+    $cuerpo = $decodificado;
+}
 
 // ----------------------------------------------------------------------
 // 2. Diagnóstico
@@ -213,11 +231,9 @@ if (preg_match('#^/api/termino_clave/([^/]+)$#', $ruta, $coincidencias)) {
 if ($ruta === '/api/universidad') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorUniversidad.php';
 
-    $controlador = new ControladorUniversidad(
-        crearServicioUniversidad()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['universidad'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -230,16 +246,14 @@ if ($ruta === '/api/universidad') {
     return;
 }
 
-if (preg_match('#^/api/universidad/([^/]+)$#', $ruta, $coincidencias)) {
+if (preg_match('#^/api/universidad/(\d+)$#', $ruta, $coincidencias)) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorUniversidad.php';
 
-    $controlador = new ControladorUniversidad(
-        crearServicioUniversidad()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['universidad'];
 
-    $clave = (int) urldecode($coincidencias[1]);
+    $clave = (int) $coincidencias[1];
 
     enrutarFicha($controlador, $metodo, $clave, $cuerpo);
     return;
