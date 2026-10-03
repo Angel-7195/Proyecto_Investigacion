@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 class AreaAplicacion
 {
     private int $id;
     private string $nombre;
-    private bool $activo;
 
     public function __construct(
         int $id,
-        string $nombre,
-        bool $activo = true
+        string $nombre
     ) {
         $this->id = $id;
         $this->nombre = $nombre;
-        $this->activo = $activo;
     }
 
     public function getId(): int
@@ -26,23 +25,17 @@ class AreaAplicacion
         return $this->nombre;
     }
 
-    public function isActivo(): bool
-    {
-        return $this->activo;
-    }
-
     public function setNombre(string $nombre): void
     {
         $this->nombre = $nombre;
     }
 
-    public function desactivar(): void
-    {
-        $this->activo = false;
-    }
 
-    public function activar(): void
+    public function toArray(): array
     {
-        $this->activo = true;
+        return [
+            'id' => $this->id,
+            'nombre' => $this->nombre,
+        ];
     }
 }

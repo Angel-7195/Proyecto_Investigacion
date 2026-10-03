@@ -1,25 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 class AreaConocimiento
 {
     private string $id;
     private string $granArea;
     private string $area;
     private string $disciplina;
-    private bool $activo;
 
     public function __construct(
         string $id,
         string $granArea,
         string $area,
-        string $disciplina,
-        bool $activo = true
+        string $disciplina
     ) {
         $this->id = $id;
         $this->granArea = $granArea;
         $this->area = $area;
         $this->disciplina = $disciplina;
-        $this->activo = $activo;
     }
 
     public function getId(): string
@@ -42,11 +41,6 @@ class AreaConocimiento
         return $this->disciplina;
     }
 
-    public function isActivo(): bool
-    {
-        return $this->activo;
-    }
-
     public function setGranArea(string $granArea): void
     {
         $this->granArea = $granArea;
@@ -62,13 +56,13 @@ class AreaConocimiento
         $this->disciplina = $disciplina;
     }
 
-    public function desactivar(): void
+    public function toArray(): array
     {
-        $this->activo = false;
-    }
-
-    public function activar(): void
-    {
-        $this->activo = true;
+        return [
+            'id' => $this->id,
+            'gran_area' => $this->granArea,
+            'area' => $this->area,
+            'disciplina' => $this->disciplina,
+        ];
     }
 }

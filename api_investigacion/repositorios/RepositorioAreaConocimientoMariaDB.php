@@ -14,7 +14,7 @@ class RepositorioAreaConocimientoMariaDB implements IRepositorioAreaConocimiento
     public function listar(): array
     {
         $sql = "
-            SELECT id, gran_area, area, disciplina
+            SELECT id, gran_area, area, disciplina, activo
             FROM area_conocimiento
             WHERE activo = TRUE
             ORDER BY id

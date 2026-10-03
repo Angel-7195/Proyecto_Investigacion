@@ -88,11 +88,9 @@ if ($ruta === '/' && $metodo === 'GET') {
 if ($ruta === '/api/area_conocimiento') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorAreaConocimiento.php';
 
-    $controlador = new ControladorAreaConocimiento(
-        crearServicioAreaConocimiento()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['area_conocimiento'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -114,11 +112,9 @@ if (
 ) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorAreaConocimiento.php';
 
-    $controlador = new ControladorAreaConocimiento(
-        crearServicioAreaConocimiento()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['area_conocimiento'];
 
     $clave = urldecode($coincidencias[1]);
 
@@ -139,11 +135,9 @@ if (
 if ($ruta === '/api/objetivo_desarrollo_sostenible') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorObjetivoDesarrolloSostenible.php';
 
-    $controlador = new ControladorObjetivoDesarrolloSostenible(
-        crearServicioObjetivoDesarrolloSostenible()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['objetivo_desarrollo_sostenible'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -165,11 +159,9 @@ if (
 ) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorObjetivoDesarrolloSostenible.php';
 
-    $controlador = new ControladorObjetivoDesarrolloSostenible(
-        crearServicioObjetivoDesarrolloSostenible()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['objetivo_desarrollo_sostenible'];
 
     $clave = (int) urldecode($coincidencias[1]);
 
@@ -190,11 +182,9 @@ if (
 if ($ruta === '/api/area_aplicacion') {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorAreaAplicacion.php';
 
-    $controlador = new ControladorAreaAplicacion(
-        crearServicioAreaAplicacion()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['area_aplicacion'];
 
     if ($metodo === 'GET') {
         $controlador->listar();
@@ -216,11 +206,9 @@ if (
 ) {
 
     require_once __DIR__ . '/servicios/ensamblador.php';
-    require_once __DIR__ . '/controladores/ControladorAreaAplicacion.php';
 
-    $controlador = new ControladorAreaAplicacion(
-        crearServicioAreaAplicacion()
-    );
+    $controladores = ensamblarControladores();
+    $controlador = $controladores['area_aplicacion'];
 
     $clave = (int) urldecode($coincidencias[1]);
 
